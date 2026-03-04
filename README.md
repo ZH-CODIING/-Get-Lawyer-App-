@@ -1,208 +1,142 @@
-⚖️ منصة المحاماة الحرّة (Get Lawyer App)
+<div align="center">
 
-منصة متكاملة بنظام العمل الحر (Freelance) تربط بين العملاء والمحامين/مكاتب المحاماة. يتيح النظام للعملاء نشر قضاياهم وتلقي عروض أسعار من محامين موثقين، مع وجود لوحة تحكم إدارية لإدارة التوثيق والموظفين.
+# ⚖️ Get Lawyer App
+### منصة المحاماة الحرّة
 
-🚀 المميزات الرئيسية (Core Features)
+**A freelance legal services platform connecting clients with verified lawyers and law firms.**
 
-نظام أدوار متعدد (Multi-Role System): (أدمن، موظف منصة، عميل، محامي، مكتب محاماة).
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Sanctum](https://img.shields.io/badge/Sanctum-Token_Auth-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 
-توثيق مزودي الخدمة: نظام رفع مستندات (هوية، رخصة مزاولة) ومراجعتها من الإدارة.
+</div>
 
-إدارة القضايا: دورة حياة كاملة للقضية (نشر، تقديم عروض، قبول، تنفيذ، إغلاق).
+---
 
-نظام الإشعارات: تنبيهات فورية لكل حدث (عرض جديد، قبول عرض، تحديث حالة التوثيق).
+## 📖 About
 
-لوحة تحكم إدارية: إحصائيات شاملة للمنصة وإدارة طلبات التوثيق والموظفين.
+منصة متكاملة بنظام العمل الحر تربط بين العملاء والمحامين/مكاتب المحاماة. يتيح النظام للعملاء نشر قضاياهم وتلقي عروض أسعار من محامين موثقين، مع وجود لوحة تحكم إدارية لإدارة التوثيق والموظفين.
 
-🛠 التكنولوجيا المستخدمة (Tech Stack)
+---
 
-Framework: Laravel 12 (Latest Version)
+## 🚀 Core Features
 
-Database: MySQL
+- **Multi-Role System** — Admin, Staff, Client, Lawyer, Law Firm
+- **Provider Verification** — Document upload & admin review workflow
+- **Case Lifecycle** — Publish → Offers → Accept → Execute → Close
+- **Notification System** — Real-time database notifications for all events
+- **Admin Dashboard** — Platform statistics, verification management, staff control
 
-Authentication: Laravel Sanctum (Token-based)
+---
 
-Programming Language: PHP 8.3+
+## 🛠 Tech Stack
 
-🏗 هيكلية قاعدة البيانات (Database Schema)
+| Layer | Technology |
+|-------|-----------|
+| Framework | Laravel 12 |
+| Language | PHP 8.3+ |
+| Database | MySQL |
+| Authentication | Laravel Sanctum (Token-based) |
+| Architecture | RESTful API |
 
-Users: لتخزين جميع أنواع المستخدمين.
+---
 
-Provider Profiles: بيانات التوثيق والسيرة الذاتية للمحامين والمكاتب.
+## 🏗 Database Schema
 
-Legal Cases: بيانات القضايا المنشورة من قبل العملاء.
+| Table | Description |
+|-------|-------------|
+| `users` | All user types (clients, lawyers, firms, staff, admins) |
+| `provider_profiles` | Verification data & bio for lawyers and law firms |
+| `legal_cases` | Cases published by clients |
+| `offers` | Price offers submitted by providers on cases |
+| `notifications` | Laravel database notifications |
 
-Offers: العروض المقدمة من المحامين على القضايا.
+---
 
-Notifications: نظام إشعارات Laravel المخزن في قاعدة البيانات.
+## 📡 API Endpoints
 
-📡 قائمة المسارات (API Endpoints)
+### 🔓 Public
 
-1. المسارات العامة (Public)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/register` | Register new account (client / lawyer / law firm) |
+| `POST` | `/api/login` | Login and receive Bearer token |
 
-Method
+### 👤 Client
 
-Endpoint
+> Requires: `Authorization: Bearer {token}`
 
-Description
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/client/cases` | List all cases for the authenticated client |
+| `POST` | `/api/client/cases` | Publish a new legal case |
+| `GET` | `/api/client/cases/{id}/offers` | View all offers on a specific case |
+| `POST` | `/api/client/offers/{id}/accept` | Accept an offer and begin execution |
+| `PATCH` | `/api/client/cases/{id}/status` | Update case status (completed / unresolved) |
 
-POST
+### ⚖️ Provider (Lawyer / Law Firm)
 
-/api/register
+> Requires: `Authorization: Bearer {token}` + verified account
 
-تسجيل حساب جديد (عميل/محامي/مكتب)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/provider/upload-docs` | Upload verification documents (ID, license, etc.) |
+| `GET` | `/api/provider/cases` | Browse available pending cases |
+| `POST` | `/api/provider/cases/{id}/offers` | Submit a price offer on a case |
 
-POST
+### 🛡 Admin & Staff
 
-/api/login
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/dashboard` | Platform-wide statistics |
+| `GET` | `/api/admin/pending-lawyers` | List verification requests awaiting review |
+| `POST` | `/api/admin/verify-lawyer/{id}` | Approve or reject a lawyer with notes |
+| `POST` | `/api/admin/add-staff` | Add a platform staff member *(Admin only)* |
 
-تسجيل الدخول والحصول على التوكن
+---
 
-2. مسارات العميل (Client)
+## ⚙️ Installation
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/client/cases
-
-عرض جميع قضايا العميل الحالي
-
-POST
-
-/api/client/cases
-
-نشر قضية قانونية جديدة
-
-GET
-
-/api/client/cases/{id}/offers
-
-عرض العروض المقدمة على قضية معينة
-
-POST
-
-/api/client/offers/{id}/accept
-
-قبول عرض محامي محدد وبدء التنفيذ
-
-PATCH
-
-/api/client/cases/{id}/status
-
-تحديث حالة القضية (مكتملة/غير محلولة)
-
-3. مسارات المحامي/المكتب (Provider)
-
-Method
-
-Endpoint
-
-Description
-
-POST
-
-/api/provider/upload-docs
-
-رفع مستندات التوثيق (هوية، رخصة، إلخ)
-
-GET
-
-/api/provider/cases
-
-تصفح القضايا المتاحة للتقديم (قيد الانتظار)
-
-POST
-
-/api/provider/cases/{id}/offers
-
-تقديم عرض سعر ومقترح على قضية
-
-4. مسارات الإدارة (Admin & Staff)
-
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/admin/dashboard
-
-إحصائيات شاملة للمنصة
-
-GET
-
-/api/admin/pending-lawyers
-
-عرض طلبات التوثيق التي تنتظر المراجعة
-
-POST
-
-/api/admin/verify-lawyer/{id}
-
-قبول أو رفض توثيق محامي مع الملاحظات
-
-POST
-
-/api/admin/add-staff
-
-إضافة موظف خدمة عملاء للمنصة (للأدمن فقط)
-
-⚙️ التثبيت والتشغيل (Installation)
-
-تحميل المشروع:
-
-git clone <repository_url>
+```bash
+# 1. Clone the repository
+git clone https://github.com/AbdalrhmanAbdoAlhade/get-lawyer-app.git
 cd get-lawyer-app
 
-
-تثبيت المكتبات:
-
+# 2. Install dependencies
 composer install
 
-
-إعداد ملف البيئة:
-
+# 3. Environment setup
 cp .env.example .env
-# قم بتعديل بيانات قاعدة البيانات في ملف .env
+# Edit .env with your database credentials
 
-
-توليد مفتاح التطبيق وعمل الهجرة:
-
+# 4. Generate key & migrate
 php artisan key:generate
 php artisan migrate
 
-
-ربط ملفات التخزين (للصور):
-
+# 5. Link storage
 php artisan storage:link
 
-
-تشغيل المشروع:
-
+# 6. Run the server
 php artisan serve
+```
 
+> API will be available at: `http://127.0.0.1:8000`
 
-📝 ملاحظات إضافية
+---
 
-جميع الطلبات المحمية تتطلب Authorization: Bearer {token} في الـ Header.
+## 📝 Notes
 
-يفضل استخدام Postman لتجربة المسارات.
+- All protected routes require `Authorization: Bearer {token}` in the request header.
+- Provider verification is **mandatory** before submitting any offers.
+- Use [Postman](https://www.postman.com/) to explore and test the API.
+- Staff accounts can only be created by users with the **Admin** role.
 
-النظام يدعم التوثيق الإلزامي للمحامين قبل السماح لهم بتقديم أي عروض.
+---
 
-📩 للتواصل والاستفسار
+## 📩 Contact
 
-إذا كان لديك أي استفسار حول المشروع، يمكنك التواصل مع Abdalrhman عبر:
+**Abdalrhman Abdo Alhade**
 
-GitHub: @AbdalrhmanAbdoAlhade
-
-Email: abdo.king22227@gmail.com
-
-تم التطوير بواسطة: Abdalrhman
+[![GitHub](https://img.shields.io/badge/GitHub-@AbdalrhmanAbdoAlhade-181717?style=flat&logo=github)](https://github.com/AbdalrhmanAbdoAlhade)
+[![Email](https://img.shields.io/badge/Email-abdo.king22227@gmail.com-D14836?style=flat&logo=gmail&logoColor=white)](mailto:abdo.king22227@gmail.com)
