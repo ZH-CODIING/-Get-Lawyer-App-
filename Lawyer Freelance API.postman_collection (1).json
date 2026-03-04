@@ -1,0 +1,672 @@
+{
+  "info": {
+    "_postman_id": "9fd6e3d7-c50a-41c7-b580-612edb8dba70",
+    "name": "Lawyer Freelance API",
+    "description": "Collection for Managing Lawyers, Clients, Cases and Admin Staff",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "34212662"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"admin\",\n    \"email\": \"admin@example.com\",\n    \"phone\": \"0101234506578\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"role\": \"client\"//'admin', 'client', 'lawyer', 'office', 'employee'\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/register",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/login",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Provider (Lawyer/Office)",
+      "item": [
+        {
+          "name": "Upload Documents",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "4|FhiuJjfUtRtaRta0zbkMGo3F8B6BaVkOGlBTGv6W7be86974",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id_photo",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "license_photo",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "personal_photo",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "iban",
+                  "value": "EG12345678901234567890",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/provider/upload-docs",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "provider",
+                "upload-docs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Browse Available Cases",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "4|FhiuJjfUtRtaRta0zbkMGo3F8B6BaVkOGlBTGv6W7be86974",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/provider/cases",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "provider",
+                "cases"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Offer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "4|FhiuJjfUtRtaRta0zbkMGo3F8B6BaVkOGlBTGv6W7be86974",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"offered_price\": 5000,\n    \"proposal_text\": \"يمكنني تولي هذه القضية وخبرتي تتجاوز 10 سنوات.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/provider/cases/1/offers",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "provider",
+                "cases",
+                "1",
+                "offers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Client",
+      "item": [
+        {
+          "name": "Create Case",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "2|9Sa7kdRGDdLt5Oyz3KYsD0h23G1GxUjFfEs3JAHV19d9aa5d",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"قضية تعويض مالي\",\n    \"description\": \"تفاصيل القضية هنا...\",\n    \"category\": \"financial\",\n    \"initial_budget\": 7000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/cases",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "cases"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Offer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|MkOoocckpW5wsDCSYL4ejwxFDW45jx3EaJIDoU2j215e522e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/offers/1/accept",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "offers",
+                "1",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Close Case (Complete/Unresolved)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|MkOoocckpW5wsDCSYL4ejwxFDW45jx3EaJIDoU2j215e522e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"completed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/cases/1/status",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "cases",
+                "1",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "offers cases",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|MkOoocckpW5wsDCSYL4ejwxFDW45jx3EaJIDoU2j215e522e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/cases/1/offers",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "cases",
+                "1",
+                "offers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cases",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|MkOoocckpW5wsDCSYL4ejwxFDW45jx3EaJIDoU2j215e522e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/cases",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "cases"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "show",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|MkOoocckpW5wsDCSYL4ejwxFDW45jx3EaJIDoU2j215e522e",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/client/cases/1",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client",
+                "cases",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin Dashboard",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "703E94TBipXHP37AtYRzIId0r5gNlE0hJ1j0Ib8Sdf3588fb",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/admin/dashboard",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Lawyer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "703E94TBipXHP37AtYRzIId0r5gNlE0hJ1j0Ib8Sdf3588fb",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"approved\",\n    \"admin_notes\": \"الأوراق سليمة\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/admin/verify-lawyer/1",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "verify-lawyer",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Platform Staff",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "703E94TBipXHP37AtYRzIId0r5gNlE0hJ1j0Ib8Sdf3588fb",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Employee 1\",\n     \"phone\": \"01012345578\",\n    \"email\": \"staff@app.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/admin/add-staff",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "add-staff"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/pending-lawyers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "703E94TBipXHP37AtYRzIId0r5gNlE0hJ1j0Ib8Sdf3588fb",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "https://get-lawyer-app.wassel-agency.com/api/admin/pending-lawyers",
+              "protocol": "https",
+              "host": [
+                "get-lawyer-app",
+                "wassel-agency",
+                "com"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "pending-lawyers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "your_token_here",
+      "type": "string"
+    }
+  ]
+}
