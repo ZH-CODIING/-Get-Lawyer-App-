@@ -8,6 +8,25 @@ use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
+    // عرض كل الطلبات مع إمكانية الفلترة حسب الحالة
+public function index(Request $request)
+{
+    // الحصول على الحالة من الرابط (مثلاً: ?status=approved)
+    $status = $request->query('status');
+
+    // بناء الاستعلام الأساسي مع علاقة المستخدم
+    $query = ProviderProfile::with('user');
+
+    // إذا تم إرسال حالة معينة، قم بالفلترة بناءً عليها
+    if ($status && in_array($status, ['pending', 'approved', 'rejected'])) {
+        $query->where('status', $status);
+    }
+
+    // جلب البيانات (يمكنك إضافة paginate للحصول على أداء أفضل)
+    $requests = $query->latest()->get();
+
+    return response()->json($requests);
+}
     // عرض كل الطلبات المعلقة للأدمن
     public function getPendingRequests()
     {
@@ -23,7 +42,7 @@ class VerificationController extends Controller
             return response()->json(['message' => 'ليس لديك صلاحية مراجعة الأوراق'], 403);
         }
         $request->validate([
-            'status' => 'required|in:approved,rejected',
+            'status' => 'required|in:approved,rejected,pending',
             'admin_notes' => 'required_if:status,rejected' // السبب إجباري في حالة الرفض
         ]);
 
