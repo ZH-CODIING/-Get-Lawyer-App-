@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->group(function () {
         // لوحة التحكم (إحصائيات)
         Route::get('/dashboard', [DashboardController::class, 'index']);
-
+Route::get('/verifications', [VerificationController::class, 'index']);
         // توثيق المحامين والمكاتب
         Route::get('/pending-lawyers', [VerificationController::class, 'getPendingRequests']);
         Route::post('/verify-lawyer/{id}', [VerificationController::class, 'verify']);
