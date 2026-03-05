@@ -17,7 +17,7 @@ use App\Http\Controllers\Provider\OfferController;
 */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::get('/provider/{id}/reviews', [CaseController::class, 'getProviderReviews']);
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::prefix('client')->group(function () {
         Route::get('/cases', [CaseController::class, 'index']);      // عرض كل القضايا
+    Route::post('/cases/{id}/review', [CaseController::class, 'addReview']);
     Route::get('/cases/{id}', [CaseController::class, 'show']);
         Route::post('/cases', [CaseController::class, 'store']); // نشر قضية
         Route::post('/offers/{id}/accept', [CaseController::class, 'acceptOffer']); // قبول عرض
