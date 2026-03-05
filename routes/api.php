@@ -18,6 +18,7 @@ use App\Http\Controllers\Provider\OfferController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/provider/{id}/reviews', [CaseController::class, 'getProviderReviews']);
+Route::get('reviews/all', [CaseController::class, 'getAllReviews']);
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/verify-lawyer/{id}', [VerificationController::class, 'verify']);
 
         // إدارة موظفي المنصة (للأدمن فقط)
-        Route::post('/add-staff', [StaffController::class, 'addStaff']);
+       Route::get('/staff', [StaffController::class, 'index']);          // عرض كل الموظفين
+    Route::post('/add-staff', [StaffController::class, 'addStaff']);   // إضافة موظف
+    Route::post('/staff/{id}', [StaffController::class, 'update']);     // تعديل موظف
     });
 
     /*
