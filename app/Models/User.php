@@ -50,4 +50,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Offer::class, 'provider_id');
     }
+    
+        // التقييمات التي حصل عليها المحامي
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'provider_id');
+    }
+    
+    // دالة لحساب متوسط التقييم (اختيارية لكن مفيدة جداً)
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviewsReceived()->avg('rating') ?: 0;
+    }
 }
