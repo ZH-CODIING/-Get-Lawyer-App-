@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\LegalCase;
 use App\Models\Offer;
+use App\Models\Review; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\CaseNotification;
@@ -117,8 +118,9 @@ public function acceptOffer($offerId)
     ]);
 }
 
-
-    // 3. العميل يغير حالة القضية (إغلاق أو إعادة فتح)
+ /**
+     * 3. العميل يغير حالة القضية (إغلاق أو إعادة فتح)
+     */
     public function updateStatus(Request $request, $caseId)
     {
         $request->validate([
@@ -133,17 +135,93 @@ public function acceptOffer($offerId)
 
         if ($request->status == 'completed') {
             $case->update(['status' => 'completed']);
-            // منطق تحويل الأموال للمحامي يتم هنا
-            return response()->json(['message' => 'تم إغلاق القضية بنجاح']);
+            return response()->json(['message' => 'تم إغلاق القضية بنجاح، يمكنك الآن تقييم المحامي']);
         }
 
         if ($request->status == 'unresolved') {
-            // إعادة القضية للبحث عن محامي آخر (Pending)
             $case->update([
                 'status' => 'pending',
                 'accepted_provider_id' => null
             ]);
             return response()->json(['message' => 'تمت إعادة القضية للحالة المعلقة']);
         }
+    }
+
+    /**
+     * 7. تقييم المحامي بعد انتهاء القضية
+     */
+    public function addReview(Request $request, $caseId)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500'
+        ]);
+
+        $case = LegalCase::findOrFail($caseId);
+
+        // التأكد أن العميل هو صاحب القضية، وأن القضية مكتملة، ولها محامي مقبول
+        if ($case->client_id !== auth()->id() || $case->status !== 'completed' || !$case->accepted_provider_id) {
+            return response()->json(['message' => 'لا يمكنك تقييم هذه القضية حالياً'], 403);
+        }
+
+        // التأكد من عدم وجود تقييم مسبق لنفس القضية
+        $exists = Review::where('case_id', $caseId)->exists();
+        if ($exists) {
+            return response()->json(['message' => 'لقد قمت بتقييم هذه القضية بالفعل'], 400);
+        }
+
+        $review = Review::create([
+            'case_id' => $case->id,
+            'client_id' => auth()->id(),
+            'provider_id' => $case->accepted_provider_id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return response()->json([
+            'message' => 'شكرًا لك! تم إضافة تقييمك بنجاح',
+            'review' => $review
+        ]);
+    }
+    
+    
+    // 7. جلب تقييمات محامي معين وحساب المتوسط (هذه الدالة التي طلبتها)
+    public function getProviderReviews($providerId)
+    {
+        $provider = User::where('id', $providerId)
+                        ->whereIn('role', ['lawyer', 'office'])
+                        ->firstOrFail();
+
+        // سيتم جلب الـ average_rating و reviews_count تلقائياً بفضل الـ $appends في موديل User
+        $reviews = Review::with('client:id,name')
+                         ->where('provider_id', $providerId)
+                         ->latest()
+                         ->get();
+
+        return response()->json([
+            'provider_name' => $provider->name,
+            'average_rating' => $provider->average_rating,
+            'total_reviews' => $provider->reviews_count,
+            'reviews' => $reviews
+        ]);
+    }
+    
+     // 3. العميل يرى العروض المقدمة على قضية معينة مع تقييمات المحامين
+    public function getOffers($caseId)
+    {
+        $case = LegalCase::where('id', $caseId)
+                         ->where('client_id', auth()->id())
+                         ->firstOrFail();
+
+        // لاحظ هنا: الموديل سيقوم تلقائياً بجلب الـ average_rating بسبب الـ $appends التي أضفناها
+        $offers = Offer::with(['provider:id,name,phone']) 
+                       ->where('case_id', $caseId)
+                       ->latest()
+                       ->get();
+
+        return response()->json([
+            'case_title' => $case->title,
+            'offers' => $offers
+        ]);
     }
 }
