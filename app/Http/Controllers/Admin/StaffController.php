@@ -35,4 +35,49 @@ class StaffController extends Controller
 
         return response()->json(['message' => 'تم إضافة موظف للمنصة بنجاح', 'staff' => $employee]);
     }
+    
+    // 1. جلب كل موظفي المنصة
+public function index()
+{
+    // التأكد أن الأدمن فقط هو من يرى الموظفين
+    if (auth()->user()->role !== 'admin') {
+        return response()->json(['message' => 'غير مصرح لك'], 403);
+    }
+
+    $staff = User::where('role', 'employee')->latest()->get();
+
+    return response()->json($staff);
+}
+
+// 2. تعديل بيانات موظف موجود
+public function update(Request $request, $id)
+{
+    if (auth()->user()->role !== 'admin') {
+        return response()->json(['message' => 'غير مصرح لك بتعديل بيانات الموظفين'], 403);
+    }
+
+    $employee = User::where('id', $id)->where('role', 'employee')->firstOrFail();
+
+    $request->validate([
+        'name' => 'sometimes|string',
+        'email' => 'sometimes|email|unique:users,email,' . $id,
+        'phone' => 'nullable|string',
+        'password' => 'nullable|min:8',
+        'is_active' => 'sometimes|boolean'
+    ]);
+
+    $data = $request->only(['name', 'email', 'phone', 'is_active']);
+    
+    // تشفير كلمة المرور في حال تم إرسالها فقط
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
+    }
+
+    $employee->update($data);
+
+    return response()->json([
+        'message' => 'تم تحديث بيانات الموظف بنجاح',
+        'staff' => $employee
+    ]);
+}
 }
